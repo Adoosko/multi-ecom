@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AnimatedContent } from "@/components/blog/slug-page/AnimatedContent";
 import { BlogPostHeaderClient } from "@/components/blog/slug-page/BlogPostHeaderClient";
 import { ParallaxFeaturedImage } from "@/components/blog/slug-page/PaarallaxFeaturedImage";
@@ -59,6 +59,7 @@ export async function generateMetadata({
         : undefined,
     };
   } catch (error) {
+    console.error("Error fetching blog post metadata:", error);
     return { title: "Blog Post" };
   }
 }
