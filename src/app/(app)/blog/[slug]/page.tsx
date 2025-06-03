@@ -35,22 +35,26 @@ interface BlogPost {
   };
 }
 
-// --- generateMetadata (bez zmeny) ---
+// --- generateMetadata (updated for Next.js 15) ---
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>; // Changed to Promise
 }): Promise<Metadata> {
+  const { slug } = await params; // Await the params
   const payloadClient = await getPayload({ config });
+
   try {
     const { docs } = (await payloadClient.find({
       collection: "blog",
-      where: { slug: { equals: params.slug } },
+      where: { slug: { equals: slug } }, // Use awaited slug
       depth: 1,
       limit: 1,
     })) as { docs: BlogPost[] };
+
     const post = docs[0];
     if (!post) return { title: "Post Not Found" };
+
     return {
       title: post.seo?.metaTitle || post.title,
       description: post.seo?.metaDescription || post.excerpt,
@@ -64,18 +68,19 @@ export async function generateMetadata({
   }
 }
 
-// --- Hlavný Server Component ---
+// --- Hlavný Server Component (updated for Next.js 15) ---
 export default async function BlogPostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>; // Changed to Promise
 }) {
+  const { slug } = await params; // Await the params
   const payloadClient = await getPayload({ config });
 
   try {
     const { docs } = (await payloadClient.find({
       collection: "blog",
-      where: { slug: { equals: params.slug } },
+      where: { slug: { equals: slug } }, // Use awaited slug
       depth: 1,
       limit: 1,
     })) as { docs: BlogPost[] };
