@@ -2,9 +2,10 @@
 
 import * as React from "react"
 import * as SheetPrimitive from "@radix-ui/react-dialog"
-import { XIcon } from "lucide-react"
+import { X, XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { Button } from "./button"
 
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
@@ -73,7 +74,10 @@ function SheetContent({
       >
         {children}
         <SheetPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-secondary absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
-          <XIcon className="size-4" />
+        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full -mr-2">
+              <X className="h-5 w-5 text-muted-foreground" />
+              <span className="sr-only">Zatvoriť</span>
+            </Button>
           <span className="sr-only">Close</span>
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>
