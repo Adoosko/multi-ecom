@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import LenisScroller from "@/components/LenisScroller";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
+import Navbar from "@/components/Nav/Navbar";
+import Footer from "./(home)/footer";
 
 const dmSans = DM_Sans({
   variable: "--font-geist-sans",
@@ -19,7 +24,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} antialiased`}>{children}</body>
+      <LenisScroller>
+     
+
+      <body className={`${dmSans.variable} antialiased`}>
+      <ThemeProvider
+          attribute="class" // Povie next-themes, aby menil triedu na <html> elemente
+          defaultTheme="system" // Predvolene použi systémové nastavenie
+          enableSystem // Povolí detekciu systémového nastavenia
+          disableTransitionOnChange // Voliteľné: Vypne prechody počas prepínania témy pre hladší zážitok
+        >
+          <Navbar/>
+          {children}
+          <Footer/>
+          <Toaster/>
+        </ThemeProvider>
+      </body>
+      </LenisScroller>
     </html>
   );
 }

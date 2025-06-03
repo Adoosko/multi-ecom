@@ -70,15 +70,25 @@ export interface Config {
     users: User;
     media: Media;
     categories: Category;
+    manufacturers: Manufacturer;
+    products: Product;
+    blog: Blog;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    categories: {
+      subcategories: 'categories';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    manufacturers: ManufacturersSelect<false> | ManufacturersSelect<true>;
+    products: ProductsSelect<false> | ProductsSelect<true>;
+    blog: BlogSelect<false> | BlogSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -138,7 +148,7 @@ export interface User {
  */
 export interface Media {
   id: string;
-  alt: string;
+  alt?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -158,6 +168,206 @@ export interface Media {
 export interface Category {
   id: string;
   name: string;
+  slug: string;
+  color?: string | null;
+  popular?: boolean | null;
+  image?: (string | null) | Media;
+  parent?: (string | null) | Category;
+  subcategories?: {
+    docs?: (string | Category)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "manufacturers".
+ */
+export interface Manufacturer {
+  id: string;
+  name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products".
+ */
+export interface Product {
+  id: string;
+  title: string;
+  slug: string;
+  status: 'draft' | 'published';
+  publishDate?: string | null;
+  manufacturer: {
+    relationTo: 'manufacturers';
+    value: string | Manufacturer;
+  };
+  /**
+   * Stručný popis produktu zobrazený v zoznamoch.
+   */
+  shortDescription: string;
+  longDescription?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  price: number;
+  /**
+   * Ak je produkt v zľave.
+   */
+  originalPrice?: number | null;
+  stock: number;
+  sku?: string | null;
+  featured?: boolean | null;
+  category: string | Category;
+  /**
+   * Kľúčové slová (napr. vodeodolný, reflexný).
+   */
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Hlavný obrázok produktu.
+   */
+  featuredImage?: (string | null) | Media;
+  images?:
+    | {
+        image: string | Media;
+        alt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Definujte dostupné farby produktu a pre každú farbu zadajte veľkosti, SKU a skladové zásoby.
+   */
+  colorVariants?:
+    | {
+        /**
+         * Napr. Červená, Modrá, Antracitová
+         */
+        color: string;
+        /**
+         * Napr. #FF0000 alebo bg-red-600. Pomôcka pre frontend.
+         */
+        colorCode?: string | null;
+        /**
+         * Hlavný obrázok pre tento farebný variant.
+         */
+        image?: (string | null) | Media;
+        /**
+         * Pre zvolenú farbu pridajte dostupné veľkosti, ich SKU a skladové zásoby.
+         */
+        sizes: {
+          size: string;
+          sku?: string | null;
+          stock: number;
+          id?: string | null;
+        }[];
+        id?: string | null;
+      }[]
+    | null;
+  specifications?:
+    | (
+        | {
+            name: string;
+            value: string;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'specItem';
+          }
+        | {
+            title: string;
+            items?:
+              | {
+                  name: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'specSection';
+          }
+      )[]
+    | null;
+  /**
+   * Produkty zobrazené pod detailom.
+   */
+  relatedProducts?: (string | Product)[] | null;
+  seo?: {
+    /**
+     * Max 60 znakov.
+     */
+    metaTitle?: string | null;
+    /**
+     * Max 160 znakov.
+     */
+    metaDescription?: string | null;
+    /**
+     * 1200x630px.
+     */
+    metaImage?: (string | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog".
+ */
+export interface Blog {
+  id: string;
+  title: string;
+  slug: string;
+  author: string | User;
+  excerpt: string;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  featuredImage?: (string | null) | Media;
+  categories?: (string | Category)[] | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    metaImage?: (string | null) | Media;
+  };
+  publishDate: string;
+  status: 'draft' | 'published';
+  readingTime?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -179,6 +389,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: string | Category;
+      } | null)
+    | ({
+        relationTo: 'manufacturers';
+        value: string | Manufacturer;
+      } | null)
+    | ({
+        relationTo: 'products';
+        value: string | Product;
+      } | null)
+    | ({
+        relationTo: 'blog';
+        value: string | Blog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -261,6 +483,137 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface CategoriesSelect<T extends boolean = true> {
   name?: T;
+  slug?: T;
+  color?: T;
+  popular?: T;
+  image?: T;
+  parent?: T;
+  subcategories?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "manufacturers_select".
+ */
+export interface ManufacturersSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "products_select".
+ */
+export interface ProductsSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  status?: T;
+  publishDate?: T;
+  manufacturer?: T;
+  shortDescription?: T;
+  longDescription?: T;
+  price?: T;
+  originalPrice?: T;
+  stock?: T;
+  sku?: T;
+  featured?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  featuredImage?: T;
+  images?:
+    | T
+    | {
+        image?: T;
+        alt?: T;
+        id?: T;
+      };
+  colorVariants?:
+    | T
+    | {
+        color?: T;
+        colorCode?: T;
+        image?: T;
+        sizes?:
+          | T
+          | {
+              size?: T;
+              sku?: T;
+              stock?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  specifications?:
+    | T
+    | {
+        specItem?:
+          | T
+          | {
+              name?: T;
+              value?: T;
+              id?: T;
+              blockName?: T;
+            };
+        specSection?:
+          | T
+          | {
+              title?: T;
+              items?:
+                | T
+                | {
+                    name?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  relatedProducts?: T;
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        metaImage?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog_select".
+ */
+export interface BlogSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  author?: T;
+  excerpt?: T;
+  content?: T;
+  featuredImage?: T;
+  categories?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        metaImage?: T;
+      };
+  publishDate?: T;
+  status?: T;
+  readingTime?: T;
   updatedAt?: T;
   createdAt?: T;
 }
