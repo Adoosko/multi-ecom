@@ -1,42 +1,62 @@
-import React from 'react';
-import { getPayload } from 'payload';
-import config from '@payload-config';
-import { notFound } from 'next/navigation';
-import { Metadata } from 'next';
-import type { Product, Media, Manufacturer, Category } from '@/payload-types'; // Importuj viac typov
-import ProductClientPage from './ProductClientPage';
+import type { Product } from "@/payload-types"; // Importuj viac typov
+import config from "@payload-config";
+import { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getPayload } from "payload";
+import ProductClientPage from "./ProductClientPage";
 
-interface ProductPageParams { params: { slug: string }; }
-const revalidate=0
-export async function generateMetadata({ params }: ProductPageParams): Promise<Metadata> {
-  const { slug } = params;
+// Updated interface for Next.js 15
+interface ProductPageParams {
+  params: Promise<{ slug: string }>; // Changed to Promise
+}
+
+export const revalidate = 0;
+
+// Updated generateMetadata for Next.js 15
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params; // Await the params
   const payload = await getPayload({ config });
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'; // Default URL
-  const siteName = 'Pyroshop.sk'; // Názov tvojho obchodu
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"; // Default URL
+  const siteName = "Pyroshop.sk"; // Názov tvojho obchodu
 
   try {
     const { docs } = await payload.find({
-      collection: 'products',
-      where: { slug: { equals: slug }, status: { equals: 'published' } },
+      collection: "products",
+      where: { slug: { equals: slug }, status: { equals: "published" } },
       depth: 2, // Depth 2 pre SEO obrázok, featured image
       limit: 1,
     });
     const product = docs[0] as Product | null;
-    if (!product) return { title: 'Produkt Nenájdený' };
+    if (!product) return { title: "Produkt Nenájdený" };
 
     // Získanie URL obrázka pre OG/Twitter
-    const getImageUrl = (imageField: Product['seo']| Product['featuredImage']): string | undefined => {
-        if (typeof imageField === 'object' && imageField !== null && 'url' in imageField && imageField.url) {
-            // Ak je URL relatívna, pridaj base URL
-            return imageField.url.startsWith('/') ? `${siteUrl}${imageField.url}` : imageField.url;
-        }
-        return undefined;
+    const getImageUrl = (
+      imageField: Product["seo"] | Product["featuredImage"]
+    ): string | undefined => {
+      if (
+        typeof imageField === "object" &&
+        imageField !== null &&
+        "url" in imageField &&
+        imageField.url
+      ) {
+        // Ak je URL relatívna, pridaj base URL
+        return imageField.url.startsWith("/")
+          ? `${siteUrl}${imageField.url}`
+          : imageField.url;
+      }
+      return undefined;
     };
 
-    const ogImageUrl = getImageUrl(product.seo?.metaImage) ?? getImageUrl(product.featuredImage);
+    const ogImageUrl =
+      getImageUrl(product.seo?.metaImage) ?? getImageUrl(product.featuredImage);
 
     const metadataTitle = product.seo?.metaTitle || product.title;
-    const metadataDescription = product.seo?.metaDescription || product.shortDescription || ''; // Fallback na prázdny string
+    const metadataDescription =
+      product.seo?.metaDescription || product.shortDescription || ""; // Fallback na prázdny string
 
     return {
       title: metadataTitle,
@@ -45,7 +65,7 @@ export async function generateMetadata({ params }: ProductPageParams): Promise<M
         title: metadataTitle,
         description: metadataDescription,
         // === OPRAVA: Použi platný typ ===
-        type: 'website', // Najbezpečnejší typ pre produkt
+        type: "website", // Najbezpečnejší typ pre produkt
         url: `${siteUrl}/produkty/${product.slug}`, // Kanonická URL stránky
         siteName: siteName,
         ...(ogImageUrl && { images: [{ url: ogImageUrl }] }), // Pridaj obrázok, len ak existuje
@@ -54,7 +74,7 @@ export async function generateMetadata({ params }: ProductPageParams): Promise<M
         // 'product:price:currency': 'EUR',
       },
       twitter: {
-        card: ogImageUrl ? 'summary_large_image' : 'summary', // Typ karty podľa obrázka
+        card: ogImageUrl ? "summary_large_image" : "summary", // Typ karty podľa obrázka
         title: metadataTitle,
         description: metadataDescription,
         ...(ogImageUrl && { images: [ogImageUrl] }),
@@ -67,17 +87,19 @@ export async function generateMetadata({ params }: ProductPageParams): Promise<M
     };
   } catch (error) {
     console.error("[Metadata Error]", error);
-    return { title: 'Produkt' };
+    return { title: "Produkt" };
   }
 }
 
+// Updated main component for Next.js 15
 export default async function ProductPage({ params }: ProductPageParams) {
-  const { slug } = params;
+  const { slug } = await params; // Await the params
   const payload = await getPayload({ config });
+
   try {
     const { docs } = await payload.find({
-      collection: 'products',
-      where: { slug: { equals: slug }, status: { equals: 'published' } },
+      collection: "products",
+      where: { slug: { equals: slug }, status: { equals: "published" } },
       depth: 2, // Potrebujeme depth 2 pre kategóriu, výrobcu, obrázky variantov atď.
       limit: 1,
     });
@@ -86,19 +108,27 @@ export default async function ProductPage({ params }: ProductPageParams) {
 
     let relatedProductsData: Product[] = [];
     if (product.relatedProducts && product.relatedProducts.length > 0) {
-      const relatedIds = product.relatedProducts.map(rel => typeof rel === 'object' && rel !== null ? rel.id : rel).filter(Boolean); // Získaj ID a odfiltruj null/undefined
+      const relatedIds = product.relatedProducts
+        .map((rel) => (typeof rel === "object" && rel !== null ? rel.id : rel))
+        .filter(Boolean); // Získaj ID a odfiltruj null/undefined
       if (relatedIds.length > 0) {
-          const { docs: relatedDocs } = await payload.find({
-            collection: 'products',
-            where: { id: { in: relatedIds }, status: { equals: 'published' } },
-            limit: 4, depth: 1, // Stačí menšia hĺbka
-          });
-          relatedProductsData = relatedDocs as Product[];
+        const { docs: relatedDocs } = await payload.find({
+          collection: "products",
+          where: { id: { in: relatedIds }, status: { equals: "published" } },
+          limit: 4,
+          depth: 1, // Stačí menšia hĺbka
+        });
+        relatedProductsData = relatedDocs as Product[];
       }
     }
 
     // Odovzdáme NAJDENÝ produkt (nie null) do klientského komponentu
-    return <ProductClientPage product={product} relatedProducts={relatedProductsData} />;
+    return (
+      <ProductClientPage
+        product={product}
+        relatedProducts={relatedProductsData}
+      />
+    );
   } catch (error) {
     console.error(`[Product Fetch Error] Slug: "${slug}"`, error);
     notFound();
