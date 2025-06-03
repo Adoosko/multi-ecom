@@ -11,13 +11,13 @@ export const Categories: CollectionConfig = {
   // },
   fields: [
     {
-      label:'Názov',
+      label: "Názov",
       name: "name",
       type: "text",
       required: true,
     },
     {
-      label:'Slug',
+      label: "Slug",
       name: "slug",
       type: "text",
       required: true,
@@ -25,32 +25,32 @@ export const Categories: CollectionConfig = {
       index: true,
     },
     {
-      label:'Farba',
+      label: "Farba",
       name: "color",
       type: "text",
     },
     {
-      label:'Populárna',
+      label: "Populárna",
       name: "popular",
       type: "checkbox",
       defaultValue: false,
     },
     {
-      label:'Obrázok',
+      label: "Obrázok",
       name: "image",
       type: "upload",
       relationTo: "media",
       required: false,
     },
     {
-      label:'Nadkategória',
+      label: "Nadkategória",
       name: "parent",
       type: "relationship",
       relationTo: "categories",
       hasMany: false,
     },
     {
-      label:'Podkategórie',
+      label: "Podkategórie",
       name: "subcategories",
       type: "join",
       collection: "categories",
