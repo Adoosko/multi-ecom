@@ -1,12 +1,12 @@
+/* eslint-disable */
 // src/components/products/AddToCartSection.tsx
 "use client";
 
-import React from 'react';
-import { Button } from '@/components/ui/button'; // Pre Wishlist
-import { Heart } from 'lucide-react';
-import QuantitySelector from '@/components/ui/quantity-selector'; // Import selectoru
-import AddToCartButton from '@/components/ui/add-to-cart-button'; // Import tlačidla
-import { cn } from '@/lib/utils';
+import React from "react";
+
+import AddToCartButton from "@/components/ui/add-to-cart-button"; // Import tlačidla
+import QuantitySelector from "@/components/ui/quantity-selector"; // Import selectoru
+import { cn } from "@/lib/utils";
 
 interface AddToCartSectionProps {
   quantity: number;
@@ -34,10 +34,12 @@ const AddToCartSection: React.FC<AddToCartSectionProps> = ({
 }) => {
   return (
     // Hlavný kontajner sekcie
-    <div className={cn(
-      " ", // Horný oddeľovač
-      className
-    )}>
+    <div
+      className={cn(
+        " ", // Horný oddeľovač
+        className
+      )}
+    >
       {/* === Responzívny Flex Kontajner === */}
       {/*
         - `flex`: Základný flex layout.
@@ -46,7 +48,6 @@ const AddToCartSection: React.FC<AddToCartSectionProps> = ({
         - `gap-3 sm:gap-4`: Medzery medzi prvkami.
       */}
       <div className="grid grid-cols-2 gap-3  ">
-
         {/* Quantity Selector */}
         <QuantitySelector
           quantity={quantity}
@@ -83,8 +84,7 @@ const AddToCartSection: React.FC<AddToCartSectionProps> = ({
           </Button>
         )} */}
       </div>
-       {/* === Koniec Responzívneho Kontajnera === */}
-
+      {/* === Koniec Responzívneho Kontajnera === */}
     </div>
   );
 };

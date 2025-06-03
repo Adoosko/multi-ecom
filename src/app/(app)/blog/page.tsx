@@ -1,7 +1,6 @@
-import React from 'react';
-import { getPayload } from 'payload';
-import config from '@payload-config';
-import BlogList from '@/components/blog/BlogList';
+import BlogList from "@/components/blog/BlogList";
+import config from "@payload-config";
+import { getPayload } from "payload";
 
 type BlogPost = {
   id: string;
@@ -16,17 +15,17 @@ type BlogPost = {
   };
 };
 
-const revalidate=0;
+export const revalidate = 0;
 
 export default async function BlogPage() {
   const payloadClient = await getPayload({ config });
-  const { docs: posts } = await payloadClient.find({
-    collection: 'blog',
-    where: { status: { equals: 'published' } },
-    sort: '-publishDate',
+  const { docs: posts } = (await payloadClient.find({
+    collection: "blog",
+    where: { status: { equals: "published" } },
+    sort: "-publishDate",
     depth: 1,
     limit: 10,
-  }) as { docs: BlogPost[] };
+  })) as { docs: BlogPost[] };
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">

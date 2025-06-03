@@ -1,9 +1,8 @@
-import React from 'react';
-import Link from 'next/link';
+import Link from "next/link";
 
 export type InternalLinkNode = {
   type: string;
-  relationTo: 'blog' | 'products' | 'categories';
+  relationTo: "blog" | "products" | "categories";
   value: {
     id: string;
     slug?: string;
@@ -14,29 +13,26 @@ export type InternalLinkNode = {
 };
 
 export const internalLinkConverter = ({ node }: { node: InternalLinkNode }) => {
-  let href = '#';
+  let href = "#";
 
   // Handle different collection types
   switch (node.relationTo) {
-    case 'blog':
+    case "blog":
       href = `/blog/${node.value.slug}`;
       break;
-    case 'products':
+    case "products":
       href = `/products/${node.value.slug}`;
       break;
-    case 'categories':
+    case "categories":
       href = `/categories/${node.value.slug}`;
       break;
     default:
-      href = '#';
+      href = "#";
   }
 
   return (
-    <Link 
-      href={href}
-      className="text-blue-600 hover:text-blue-800 underline"
-    >
-      {node.children.map((child, i) => child.text).join('')}
+    <Link href={href} className="text-blue-600 hover:text-blue-800 underline">
+      {node.children.map((child) => child.text).join("")}
     </Link>
   );
 };

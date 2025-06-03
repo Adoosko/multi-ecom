@@ -1,8 +1,5 @@
 "use client";
-import React from "react";
 import { Smile } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
 export function CartStepDone() {
   return (
@@ -12,7 +9,6 @@ export function CartStepDone() {
       <p className="text-muted-foreground mb-4">
         Ďakujeme za váš nákup. Potvrdenie vám bolo zaslané na e-mail.
       </p>
-     
     </div>
   );
 }

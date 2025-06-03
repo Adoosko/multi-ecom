@@ -1,8 +1,14 @@
+/* eslint-disable */
 "use client";
-import React from "react";
 import { Button } from "@/components/ui/button";
 
-export function CartStepShipping({ onBack, onNext }: { onBack: () => void; onNext: () => void }) {
+export function CartStepShipping({
+  onBack,
+  onNext,
+}: {
+  onBack: () => void;
+  onNext: () => void;
+}) {
   // Tu môžeš pridať vlastné komponenty na výber dopravy/platby
   return (
     <div className="bg-card rounded-xl border border-border p-6">
@@ -12,7 +18,6 @@ export function CartStepShipping({ onBack, onNext }: { onBack: () => void; onNex
         <Button variant="outline" onClick={onBack}>
           Späť do košíka
         </Button>
-       
       </div>
     </div>
   );

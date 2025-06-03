@@ -1,10 +1,10 @@
 // src/components/ui/quantity-selector.tsx
 "use client";
 
-import React from 'react';
-import { Button } from '@/components/ui/button'; // ShadCN/ui Button
-import { Minus, Plus } from 'lucide-react'; // Ikony
-import { cn } from '@/lib/utils'; // Utility pre triedy
+import React from "react";
+// ShadCN/ui Button
+import { cn } from "@/lib/utils"; // Utility pre triedy
+import { Minus, Plus } from "lucide-react"; // Ikony
 
 interface QuantitySelectorProps {
   quantity: number; // Aktuálne množstvo
@@ -32,7 +32,8 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   // Handler pre zvýšenie množstva
   const handleIncrement = () => {
     // Zvýš, ale nie nad maximum (ak je maximum definované a > 0)
-    const newQuantity = maxQuantity > 0 ? Math.min(maxQuantity, quantity + 1) : quantity + 1;
+    const newQuantity =
+      maxQuantity > 0 ? Math.min(maxQuantity, quantity + 1) : quantity + 1;
     onChange(newQuantity);
   };
 
@@ -40,7 +41,7 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     // Ak je vstup prázdny, dočasne to akceptujeme (užívateľ môže písať)
-    if (value === '') {
+    if (value === "") {
       // Môžeme dočasne nastaviť na minQuantity alebo počkať na onBlur
       // Pre jednoduchosť zatiaľ nič nerobíme, validácia prebehne v onBlur alebo pri +/-
       return;
@@ -49,33 +50,38 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
     const numValue = parseInt(value, 10);
     if (!isNaN(numValue)) {
       // Validácia hodnoty medzi min a max
-      const validatedQuantity = Math.max(minQuantity, maxQuantity > 0 ? Math.min(numValue, maxQuantity) : numValue);
+      const validatedQuantity = Math.max(
+        minQuantity,
+        maxQuantity > 0 ? Math.min(numValue, maxQuantity) : numValue
+      );
       onChange(validatedQuantity);
     }
   };
 
   // Handler pre validáciu po opustení inputu
-   const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      let numValue = parseInt(value, 10);
+  const handleInputBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    let numValue = parseInt(value, 10);
 
-      // Ak je vstup prázdny alebo neplatný, vráť na minimum
-      if (isNaN(numValue) || value === '') {
-          numValue = minQuantity;
-      }
+    // Ak je vstup prázdny alebo neplatný, vráť na minimum
+    if (isNaN(numValue) || value === "") {
+      numValue = minQuantity;
+    }
 
-       // Finálna validácia rozsahu
-      const validatedQuantity = Math.max(minQuantity, maxQuantity > 0 ? Math.min(numValue, maxQuantity) : numValue);
+    // Finálna validácia rozsahu
+    const validatedQuantity = Math.max(
+      minQuantity,
+      maxQuantity > 0 ? Math.min(numValue, maxQuantity) : numValue
+    );
 
-      // Ak sa hodnota líši od aktuálnej, zavolaj onChange
-      if (validatedQuantity !== quantity) {
-          onChange(validatedQuantity);
-      } else if (value === '') {
-          // Ak bol input vymazaný a aktuálne quantity je už minimum, aj tak "resetni" zobrazenie
-          onChange(minQuantity);
-      }
-   };
-
+    // Ak sa hodnota líši od aktuálnej, zavolaj onChange
+    if (validatedQuantity !== quantity) {
+      onChange(validatedQuantity);
+    } else if (value === "") {
+      // Ak bol input vymazaný a aktuálne quantity je už minimum, aj tak "resetni" zobrazenie
+      onChange(minQuantity);
+    }
+  };
 
   // Podmienky pre deaktiváciu tlačidiel
   const canDecrement = quantity > minQuantity;
@@ -94,7 +100,6 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
     >
       {/* Tlačidlo Mínus */}
       <button
-        
         onClick={handleDecrement}
         // Deaktivuj, ak je disabled celý selector alebo ak nie je možné znížiť
         disabled={disabled || !canDecrement}
@@ -126,8 +131,6 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
 
       {/* Tlačidlo Plus */}
       <button
-        
-     
         onClick={handleIncrement}
         // Deaktivuj, ak je disabled celý selector alebo ak nie je možné zvýšiť
         disabled={disabled || !canIncrement}

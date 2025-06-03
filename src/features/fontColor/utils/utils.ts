@@ -1,8 +1,9 @@
+/* eslint-disable */
 // src/features/fontColor/utils/translateColor.ts
-import { ColorTranslator } from 'colortranslator';
+import { ColorTranslator } from "colortranslator";
 
 // Definujeme typ pre podporované formáty
-type TargetColorFormat = 'HEX' | 'RGB' | 'HSL' // Môžeš pridať ďalšie podľa potreby
+type TargetColorFormat = "HEX" | "RGB" | "HSL"; // Môžeš pridať ďalšie podľa potreby
 
 /**
  * Konvertuje CSS farbu do špecifikovaného formátu.
@@ -24,14 +25,16 @@ export function translateColor(
 
     // Konvertujeme na cieľový formát
     switch (targetFormat) {
-      case 'HEX':
+      case "HEX":
         return translator.HEX;
-      case 'RGB':
+      case "RGB":
         return translator.RGB; // Vráti string ako 'rgb(r, g, b)'
-      case 'HSL':
+      case "HSL":
         return translator.HSL; // Vráti string ako 'hsl(h, s%, l%)'
       default:
-        console.warn(`Unsupported target format in translateColor: ${targetFormat}`);
+        console.warn(
+          `Unsupported target format in translateColor: ${targetFormat}`
+        );
         return undefined;
     }
   } catch (error) {

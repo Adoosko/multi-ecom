@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetFooter,
-  SheetClose,
 } from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { X, Palette, XCircle, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Check, Palette, XCircle } from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 interface AvailableColor {
   color: string;
@@ -37,7 +37,9 @@ const ColorSelectorDrawer: React.FC<ColorSelectorDrawerProps> = ({
   selectedColor,
   onConfirm,
 }) => {
-  const [tempSelectedColor, setTempSelectedColor] = useState<string | null>(selectedColor);
+  const [tempSelectedColor, setTempSelectedColor] = useState<string | null>(
+    selectedColor
+  );
 
   useEffect(() => {
     if (isOpen) setTempSelectedColor(selectedColor);
@@ -63,7 +65,6 @@ const ColorSelectorDrawer: React.FC<ColorSelectorDrawerProps> = ({
           <SheetTitle className="text-lg font-bold tracking-tight text-foreground">
             Vyberte farbu
           </SheetTitle>
-         
         </SheetHeader>
 
         {/* === Obsah s farbami === */}
@@ -110,7 +111,8 @@ const ColorSelectorDrawer: React.FC<ColorSelectorDrawerProps> = ({
                       boxShadow: isSelected
                         ? "0 4px 24px 0 rgba(220,38,38,0.10)"
                         : "0 2px 8px 0 rgba(0,0,0,0.05)",
-                      transition: "box-shadow .2s, border-color .2s, transform .2s",
+                      transition:
+                        "box-shadow .2s, border-color .2s, transform .2s",
                     }}
                   />
 
@@ -127,14 +129,20 @@ const ColorSelectorDrawer: React.FC<ColorSelectorDrawerProps> = ({
                   {/* Overlay pre vybraný stav */}
                   {isSelected && isAvailable && (
                     <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <Check className="w-7 h-7 text-white drop-shadow-lg animate-fade-in" strokeWidth={3} />
+                      <Check
+                        className="w-7 h-7 text-white drop-shadow-lg animate-fade-in"
+                        strokeWidth={3}
+                      />
                     </span>
                   )}
 
                   {/* Overlay pre nedostupný stav */}
                   {!isAvailable && (
                     <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <XCircle className="w-8 h-8 text-muted-foreground/80" strokeWidth={1.5} />
+                      <XCircle
+                        className="w-8 h-8 text-muted-foreground/80"
+                        strokeWidth={1.5}
+                      />
                     </span>
                   )}
                 </button>

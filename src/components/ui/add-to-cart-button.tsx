@@ -1,10 +1,10 @@
 // src/components/ui/add-to-cart-button.tsx
 "use client";
 
-import React from 'react';
-import { Button } from '@/components/ui/button'; // ShadCN/ui Button
-import { ShoppingCart, Loader2, AlertCircle } from 'lucide-react'; // Ikony
-import { cn } from '@/lib/utils';
+import React from "react";
+// ShadCN/ui Button
+import { cn } from "@/lib/utils";
+import { AlertCircle, Loader2, ShoppingCart } from "lucide-react"; // Ikony
 
 interface AddToCartButtonProps {
   onClick: () => void;
@@ -24,17 +24,17 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
   className,
 }) => {
   // Určenie textu a ikony na základe stavu
-  let buttonText = 'Pridať do košíka';
+  let buttonText = "Pridať do košíka";
   let ButtonIcon = ShoppingCart;
 
   if (isLoading) {
-    buttonText = 'Pridávam...';
+    buttonText = "Pridávam...";
     ButtonIcon = Loader2;
   } else if (!isVariantSelected) {
-    buttonText = 'Vyberte variant';
+    buttonText = "Vyberte variant";
     ButtonIcon = AlertCircle;
   } else if (!canAddToCart) {
-    buttonText = 'Nedostupné';
+    buttonText = "Nedostupné";
     ButtonIcon = AlertCircle;
   }
 
@@ -42,7 +42,7 @@ const AddToCartButton: React.FC<AddToCartButtonProps> = ({
 
   return (
     <button
-       // Väčšie tlačidlo pre hlavnú akciu
+      // Väčšie tlačidlo pre hlavnú akciu
       className={cn(
         "w-full items-center flex justify-center gap-2 ", // Flex-grow, aby zabralo dostupný priestor vedľa quantity
         " rounded-full bg-red-600 hover:bg-red-700 text-primary-foreground", // Základné farby

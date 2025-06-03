@@ -1,20 +1,23 @@
 // src/components/products/ProductDetails.tsx
 "use client";
 
-import React, { useState } from "react";
 import Link from "next/link";
+import React, { useState } from "react";
 
-import SizeSelectorDrawer from "./SizeSelectorDrawer";
-import ColorSelectorTrigger from "./ColorSelectorTrigger";
-import ColorSelectorDrawer from "./ColorSelectorDrawer";
 import AddToCartSection from "./AddToCartSection";
+import ColorSelectorDrawer from "./ColorSelectorDrawer";
+import ColorSelectorTrigger from "./ColorSelectorTrigger";
 import PriceDisplay from "./PriceDisplay";
+import SizeSelectorDrawer from "./SizeSelectorDrawer";
 import TrustSignals from "./TrustSignals";
-import { cn } from "@/lib/utils";
-import type { Product, Manufacturer } from "@/payload-types";
-import type { ClientColorVariant, SelectedSize } from "@/app/(app)/products/[slug]/ProductClientPage";
-import SizeSelectorTrigger from "./SizeSelector";
+
+import type {
+  ClientColorVariant,
+  SelectedSize,
+} from "@/app/(app)/products/[slug]/ProductClientPage";
+import type { Manufacturer, Product } from "@/payload-types";
 import { RotateCw, ShieldCheck, Truck } from "lucide-react";
+import SizeSelectorTrigger from "./SizeSelector";
 
 // Props definícia
 interface ProductDetailsProps {

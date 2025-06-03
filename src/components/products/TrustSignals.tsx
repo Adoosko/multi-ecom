@@ -1,9 +1,9 @@
 // src/components/products/TrustSignals.tsx
 "use client";
 
-import React from 'react';
-import { Check, ShieldCheck, Truck, RotateCw } from 'lucide-react'; // Príklady relevantných ikon
-import { cn } from '@/lib/utils';
+import React from "react";
+// Príklady relevantných ikon
+import { cn } from "@/lib/utils";
 
 // Typ pre jeden signál dôvery
 interface TrustSignalItem {

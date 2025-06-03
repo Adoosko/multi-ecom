@@ -1,7 +1,6 @@
 // src/store/cartStore.ts
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import type { Product, Media } from '@/payload-types'; // Importuj potrebné typy z Payload
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 // Definícia položky v košíku
 export interface CartItem {
@@ -35,47 +34,54 @@ export const useCartStore = create<CartState>()(
       items: [], // Počiatočný stav - prázdny košík
 
       // Akcia na pridanie položky (alebo zvýšenie množstva)
-      addItem: (itemToAdd) => set((state) => {
-        const existingItemIndex = state.items.findIndex(item => item.variantId === itemToAdd.variantId);
-        let updatedItems;
-
-        if (existingItemIndex > -1) {
-          // Položka už existuje, zvýšime množstvo
-          updatedItems = state.items.map((item, index) =>
-            index === existingItemIndex
-              ? { ...item, quantity: item.quantity + itemToAdd.quantity } // Pripočítame nové množstvo
-              : item
+      addItem: (itemToAdd) =>
+        set((state) => {
+          const existingItemIndex = state.items.findIndex(
+            (item) => item.variantId === itemToAdd.variantId
           );
-        } else {
-          // Položka neexistuje, pridáme ju do poľa
-          updatedItems = [...state.items, itemToAdd];
-        }
-        console.log("Cart updated:", updatedItems); // Log pre debugovanie
-        return { items: updatedItems };
-      }),
+          let updatedItems;
+
+          if (existingItemIndex > -1) {
+            // Položka už existuje, zvýšime množstvo
+            updatedItems = state.items.map((item, index) =>
+              index === existingItemIndex
+                ? { ...item, quantity: item.quantity + itemToAdd.quantity } // Pripočítame nové množstvo
+                : item
+            );
+          } else {
+            // Položka neexistuje, pridáme ju do poľa
+            updatedItems = [...state.items, itemToAdd];
+          }
+          console.log("Cart updated:", updatedItems); // Log pre debugovanie
+          return { items: updatedItems };
+        }),
 
       // Akcia na odstránenie položky
-      removeItem: (variantIdToRemove) => set((state) => ({
-        items: state.items.filter(item => item.variantId !== variantIdToRemove),
-      })),
+      removeItem: (variantIdToRemove) =>
+        set((state) => ({
+          items: state.items.filter(
+            (item) => item.variantId !== variantIdToRemove
+          ),
+        })),
 
       // Akcia na aktualizáciu množstva konkrétnej položky
-      updateQuantity: (variantIdToUpdate, newQuantity) => set((state) => {
-        // Zabezpečíme, že množstvo neklesne pod 1
-        const validatedQuantity = Math.max(1, newQuantity);
-        return {
-          items: state.items.map(item =>
-            item.variantId === variantIdToUpdate
-              ? { ...item, quantity: validatedQuantity }
-              : item
-          ),
-        };
-        // Ak by sme chceli odstrániť pri quantity 0:
-        // if (newQuantity <= 0) {
-        //   return { items: state.items.filter(item => item.variantId !== variantIdToUpdate) };
-        // }
-        // return { items: updatedItems };
-      }),
+      updateQuantity: (variantIdToUpdate, newQuantity) =>
+        set((state) => {
+          // Zabezpečíme, že množstvo neklesne pod 1
+          const validatedQuantity = Math.max(1, newQuantity);
+          return {
+            items: state.items.map((item) =>
+              item.variantId === variantIdToUpdate
+                ? { ...item, quantity: validatedQuantity }
+                : item
+            ),
+          };
+          // Ak by sme chceli odstrániť pri quantity 0:
+          // if (newQuantity <= 0) {
+          //   return { items: state.items.filter(item => item.variantId !== variantIdToUpdate) };
+          // }
+          // return { items: updatedItems };
+        }),
 
       // Akcia na vyprázdnenie košíka
       clearCart: () => set({ items: [] }),
@@ -89,12 +95,14 @@ export const useCartStore = create<CartState>()(
       // Selektor na získanie celkovej ceny košíka
       getCartTotal: () => {
         const { items } = get();
-        return items.reduce((total, item) => total + item.price * item.quantity, 0);
+        return items.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0
+        );
       },
-
     }),
     {
-      name: 'shopping-cart-storage', // Názov kľúča v localStorage
+      name: "shopping-cart-storage", // Názov kľúča v localStorage
       storage: createJSONStorage(() => localStorage), // Použijeme localStorage
       // Voliteľné: Čiastočná perzistencia (ak by si nechcel ukladať všetko)
       // partialize: (state) => ({ items: state.items }),

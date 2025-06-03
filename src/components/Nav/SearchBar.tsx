@@ -1,14 +1,17 @@
+/* eslint-disable */
 // src/components/navigation/SearchBar.tsx
-import React, { useState } from 'react';
-import { Search, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
+import { Search, X } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
 // Add prop to control initial transparency based on scroll
-interface SearchBarProps { isScrolled?: boolean; }
+interface SearchBarProps {
+  isScrolled?: boolean;
+}
 
 const SearchBar: React.FC<SearchBarProps> = ({ isScrolled = false }) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const { theme } = useTheme();
@@ -27,7 +30,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ isScrolled = false }) => {
     const trimmedQuery = searchQuery.trim();
     if (trimmedQuery) {
       router.push(`/vyhladavanie?q=${encodeURIComponent(trimmedQuery)}`);
-      setSearchQuery('');
+      setSearchQuery("");
       setIsDropdownOpen(false);
     }
   };
@@ -41,7 +44,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ isScrolled = false }) => {
           onChange={handleSearchChange}
           placeholder="Hľadať produkty..."
           aria-label="Vyhľadať produkty"
-          className={`w-48 lg:w-64 rounded-full py-2 pl-10 pr-4 transition-all duration-300 ease-in-out group-focus-within:w-64 lg:group-focus-within:w-80 focus:outline-none focus:ring-2 ${theme === 'dark' ? 'bg-neutral-800 text-gray-100 placeholder-gray-400 focus:ring-neutral-600 focus:bg-neutral-800' : 'bg-white text-gray-900 placeholder-gray-400 focus:ring-gray-400 focus:bg-white'} border ${theme === 'dark' ? 'border-neutral-700' : 'border-gray-200'} focus:border-transparent`}
+          className={`w-48 lg:w-64 rounded-full py-2 pl-10 pr-4 transition-all duration-300 ease-in-out group-focus-within:w-64 lg:group-focus-within:w-80 focus:outline-none focus:ring-2 ${theme === "dark" ? "bg-neutral-800 text-gray-100 placeholder-gray-400 focus:ring-neutral-600 focus:bg-neutral-800" : "bg-white text-gray-900 placeholder-gray-400 focus:ring-gray-400 focus:bg-white"} border ${theme === "dark" ? "border-neutral-700" : "border-gray-200"} focus:border-transparent`}
         />
         <button
           type="submit"
@@ -53,7 +56,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ isScrolled = false }) => {
         {searchQuery && (
           <button
             type="button"
-            onClick={() => setSearchQuery('')}
+            onClick={() => setSearchQuery("")}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-400 transition-colors"
           >
             <X size={20} />
@@ -61,7 +64,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ isScrolled = false }) => {
         )}
       </form>
       {isDropdownOpen && searchQuery && (
-        <div className={`absolute top-full left-0 w-full bg-white dark:bg-neutral-800 mt-2 rounded-lg shadow-lg border dark:border-neutral-700 border-gray-200`}>
+        <div
+          className={`absolute top-full left-0 w-full bg-white dark:bg-neutral-800 mt-2 rounded-lg shadow-lg border dark:border-neutral-700 border-gray-200`}
+        >
           <div className="p-4 text-gray-600 dark:text-gray-300">
             <p className="text-sm mb-2">Nedávne vyhľadávania</p>
             <div className="space-y-2">

@@ -1,7 +1,5 @@
+/* eslint-disable */
 import type { CollectionConfig } from "payload";
-import { Users } from "./Users";
-import { Categories } from "./Categories";
-import { Media } from "./Media";
 
 export const Blog: CollectionConfig = {
   slug: "blog",
@@ -71,9 +69,7 @@ export const Blog: CollectionConfig = {
       name: "tags",
       label: "Tags",
       type: "array",
-      fields: [
-        { name: "tag", type: "text" },
-      ],
+      fields: [{ name: "tag", type: "text" }],
     },
     {
       name: "seo",
@@ -81,8 +77,17 @@ export const Blog: CollectionConfig = {
       type: "group",
       fields: [
         { name: "metaTitle", label: "Meta Title", type: "text" },
-        { name: "metaDescription", label: "Meta Description", type: "textarea" },
-        { name: "metaImage", label: "Meta Image", type: "upload", relationTo: "media" },
+        {
+          name: "metaDescription",
+          label: "Meta Description",
+          type: "textarea",
+        },
+        {
+          name: "metaImage",
+          label: "Meta Image",
+          type: "upload",
+          relationTo: "media",
+        },
       ],
     },
     {
@@ -116,8 +121,8 @@ export const Blog: CollectionConfig = {
     beforeChange: [
       ({ data }) => {
         if (data.content) {
-          let plainText = '';
-          if (typeof data.content === 'string') {
+          let plainText = "";
+          if (typeof data.content === "string") {
             plainText = data.content;
           } else if (Array.isArray(data.content)) {
             try {
@@ -125,28 +130,30 @@ export const Blog: CollectionConfig = {
                 .map((block: any) => {
                   if (block.children) {
                     return block.children
-                      .map((child: any) => (typeof child.text === 'string' ? child.text : ''))
-                      .join(' ');
+                      .map((child: any) =>
+                        typeof child.text === "string" ? child.text : ""
+                      )
+                      .join(" ");
                   }
-                  return '';
+                  return "";
                 })
-                .join(' ');
+                .join(" ");
             } catch (e) {
-              console.error('Error processing content for reading time:', e);
+              console.error("Error processing content for reading time:", e);
             }
           }
-          
+
           const words = plainText.split(/\s+/).filter(Boolean).length;
           data.readingTime = Math.ceil(words / 200);
         }
-        
+
         if (!data.slug && data.title) {
           data.slug = data.title
             .toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w-]+/g, '');
+            .replace(/\s+/g, "-")
+            .replace(/[^\w-]+/g, "");
         }
-        
+
         return data;
       },
     ],

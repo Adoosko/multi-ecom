@@ -1,15 +1,23 @@
 // src/app/kategorie/[categorySlug]/CategoryClientPage.tsx
 "use client";
 
-import React from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation'; // Pre pagináciu
-import type { Product, Category } from '@/payload-types';
-import type { PaginatedDocs } from 'payload';
+import type { Category, Product } from "@/payload-types";
+import { usePathname, useRouter, useSearchParams } from "next/navigation"; // Pre pagináciu
+import type { PaginatedDocs } from "payload";
+import React from "react";
 
-import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationLink, PaginationEllipsis, PaginationNext } from '@/components/ui/pagination'; // ShadCN Paginácia
-import { cn } from '@/lib/utils';
-import { AlertTriangle } from 'lucide-react'; // Ikona pre prázdny stav
-import ProductCard from '@/components/ProductCard';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"; // ShadCN Paginácia
+
+import ProductCard from "@/components/ProductCard";
+import { AlertTriangle } from "lucide-react"; // Ikona pre prázdny stav
 
 interface CategoryClientPageProps {
   category: Category;
@@ -32,17 +40,21 @@ const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
     hasNextPage,
     hasPrevPage,
     prevPage,
-    nextPage
+    nextPage,
   } = productsResult;
 
   // --- Funkcia pre navigáciu na inú stránku ---
   const handlePageChange = (pageNumber: number) => {
-    if (pageNumber < 1 || pageNumber > totalPages || pageNumber === currentPage) {
+    if (
+      pageNumber < 1 ||
+      pageNumber > totalPages ||
+      pageNumber === currentPage
+    ) {
       return; // Nerob nič, ak je stránka neplatná alebo rovnaká
     }
     // Vytvor nový objekt searchParams
     const current = new URLSearchParams(Array.from(searchParams.entries()));
-    current.set('page', pageNumber.toString());
+    current.set("page", pageNumber.toString());
 
     // Získaj query string
     const search = current.toString();
@@ -64,15 +76,18 @@ const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
 
     // Uprav, ak sme na začiatku alebo na konci
     if (currentPage - halfMaxPages < 1) {
-        endPage = Math.min(totalPages, maxPagesToShow);
+      endPage = Math.min(totalPages, maxPagesToShow);
     }
     if (currentPage + halfMaxPages > totalPages) {
-        startPage = Math.max(1, totalPages - maxPagesToShow + 1);
+      startPage = Math.max(1, totalPages - maxPagesToShow + 1);
     }
 
-
     if (startPage > 1) {
-      items.push(<PaginationItem key="start-ellipsis"><PaginationEllipsis /></PaginationItem>);
+      items.push(
+        <PaginationItem key="start-ellipsis">
+          <PaginationEllipsis />
+        </PaginationItem>
+      );
     }
 
     for (let i = startPage; i <= endPage; i++) {
@@ -80,9 +95,12 @@ const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
         <PaginationItem key={i}>
           <PaginationLink
             href={`${pathname}?page=${i}`} // Použijeme Link pre SEO
-            onClick={(e) => { e.preventDefault(); handlePageChange(i); }} // Ale navigujeme cez router
+            onClick={(e) => {
+              e.preventDefault();
+              handlePageChange(i);
+            }} // Ale navigujeme cez router
             isActive={i === currentPage}
-            aria-current={i === currentPage ? 'page' : undefined}
+            aria-current={i === currentPage ? "page" : undefined}
           >
             {i}
           </PaginationLink>
@@ -91,12 +109,15 @@ const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
     }
 
     if (endPage < totalPages) {
-      items.push(<PaginationItem key="end-ellipsis"><PaginationEllipsis /></PaginationItem>);
+      items.push(
+        <PaginationItem key="end-ellipsis">
+          <PaginationEllipsis />
+        </PaginationItem>
+      );
     }
 
     return items;
   };
-
 
   return (
     <div className="max-w-screen-xl mx-auto  px-1  lg:px-8 py-8 md:py-12">
@@ -109,7 +130,7 @@ const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
         {category.slug && (
           <div className="prose dark:prose-invert max-w-none text-muted-foreground text-base">
             {/* Ak je slug string: */}
-            {typeof category.slug === 'string' && <p>{category.slug}</p>}
+            {typeof category.slug === "string" && <p>{category.slug}</p>}
             {/* Ak je slug RichText objekt (potrebuješ RichText renderer): */}
             {/* {typeof category.slug === 'object' && <RichText content={category.slug} />} */}
           </div>
@@ -122,17 +143,21 @@ const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
       {/* Mriežka Produktov */}
       {products && products.length > 0 ? (
         <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 ">
-          {products.map((product:Product, index:number) => (
+          {products.map((product: Product, index: number) => (
             <ProductCard key={product.id} product={product} index={index} />
           ))}
         </div>
       ) : (
         // Zobrazenie, ak nie sú žiadne produkty
         <div className="flex flex-col items-center justify-center text-center py-16 px-6 border border-dashed border-border rounded-lg bg-muted/30">
-           <AlertTriangle size={48} className="text-muted-foreground/50 mb-4" />
-           <h3 className="text-xl font-semibold text-foreground mb-2">Žiadne produkty</h3>
-           <p className="text-muted-foreground">V tejto kategórii sa momentálne nenachádzajú žiadne produkty.</p>
-           {/* <Button variant="outline" size="sm" className="mt-6" onClick={() => router.push('/produkty')}>Zobraziť všetky produkty</Button> */}
+          <AlertTriangle size={48} className="text-muted-foreground/50 mb-4" />
+          <h3 className="text-xl font-semibold text-foreground mb-2">
+            Žiadne produkty
+          </h3>
+          <p className="text-muted-foreground">
+            V tejto kategórii sa momentálne nenachádzajú žiadne produkty.
+          </p>
+          {/* <Button variant="outline" size="sm" className="mt-6" onClick={() => router.push('/produkty')}>Zobraziť všetky produkty</Button> */}
         </div>
       )}
 
@@ -144,11 +169,16 @@ const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
               {/* Predchádzajúca stránka */}
               <PaginationItem>
                 <PaginationPrevious
-                  href={hasPrevPage ? `${pathname}?page=${prevPage}` : '#'}
-                  onClick={(e) => { e.preventDefault(); if(prevPage) handlePageChange(prevPage); }}
+                  href={hasPrevPage ? `${pathname}?page=${prevPage}` : "#"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (prevPage) handlePageChange(prevPage);
+                  }}
                   aria-disabled={!hasPrevPage}
                   tabIndex={!hasPrevPage ? -1 : undefined}
-                  className={!hasPrevPage ? "pointer-events-none opacity-50" : undefined}
+                  className={
+                    !hasPrevPage ? "pointer-events-none opacity-50" : undefined
+                  }
                 />
               </PaginationItem>
 
@@ -158,11 +188,16 @@ const CategoryClientPage: React.FC<CategoryClientPageProps> = ({
               {/* Nasledujúca stránka */}
               <PaginationItem>
                 <PaginationNext
-                  href={hasNextPage ? `${pathname}?page=${nextPage}` : '#'}
-                  onClick={(e) => { e.preventDefault(); if(nextPage) handlePageChange(nextPage); }}
+                  href={hasNextPage ? `${pathname}?page=${nextPage}` : "#"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (nextPage) handlePageChange(nextPage);
+                  }}
                   aria-disabled={!hasNextPage}
                   tabIndex={!hasNextPage ? -1 : undefined}
-                  className={!hasNextPage ? "pointer-events-none opacity-50" : undefined}
+                  className={
+                    !hasNextPage ? "pointer-events-none opacity-50" : undefined
+                  }
                 />
               </PaginationItem>
             </PaginationContent>

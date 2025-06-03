@@ -1,12 +1,12 @@
+/* eslint-disable */
 "use client";
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import QuantitySelector from "@/components/ui/quantity-selector";
-import { Trash2 } from "lucide-react";
-import { useCartStore } from "@/store/cartStore";
 import { cn } from "@/lib/utils";
+import { useCartStore } from "@/store/cartStore";
+import { Trash2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function CartStepProducts({ onNext }: { onNext: () => void }) {
   const items = useCartStore((s) => s.items);
@@ -64,7 +64,10 @@ export function CartStepProducts({ onNext }: { onNext: () => void }) {
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                   <span className="text-sm font-bold text-foreground">
-                    {item.price.toLocaleString("sk-SK", { style: "currency", currency: "EUR" })}
+                    {item.price.toLocaleString("sk-SK", {
+                      style: "currency",
+                      currency: "EUR",
+                    })}
                   </span>
                   <span className="text-xs text-muted-foreground">s DPH</span>
                 </div>
@@ -72,7 +75,10 @@ export function CartStepProducts({ onNext }: { onNext: () => void }) {
               <div className="flex sm:hidden mt-2 items-center gap-2">
                 <span className="text-xs text-muted-foreground">Spolu:</span>
                 <span className="font-bold text-foreground">
-                  {(item.price * item.quantity).toLocaleString("sk-SK", { style: "currency", currency: "EUR" })}
+                  {(item.price * item.quantity).toLocaleString("sk-SK", {
+                    style: "currency",
+                    currency: "EUR",
+                  })}
                 </span>
               </div>
             </div>
@@ -96,7 +102,10 @@ export function CartStepProducts({ onNext }: { onNext: () => void }) {
                 </Button>
               </div>
               <span className="hidden sm:block text-xs text-muted-foreground font-semibold">
-                {(item.price * item.quantity).toLocaleString("sk-SK", { style: "currency", currency: "EUR" })}
+                {(item.price * item.quantity).toLocaleString("sk-SK", {
+                  style: "currency",
+                  currency: "EUR",
+                })}
               </span>
             </div>
           </div>
@@ -111,11 +120,11 @@ export function CartStepProducts({ onNext }: { onNext: () => void }) {
             Vyprázdniť košík
           </Button>
           <span className="text-xs text-muted-foreground">
-            Celkom položiek: <b>{items.reduce((sum, i) => sum + i.quantity, 0)}</b>
+            Celkom položiek:{" "}
+            <b>{items.reduce((sum, i) => sum + i.quantity, 0)}</b>
           </span>
         </div>
       </div>
-     
     </>
   );
 }

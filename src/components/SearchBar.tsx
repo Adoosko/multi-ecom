@@ -1,19 +1,23 @@
-'use client';
+"use client";
 
-import { useState, useEffect, FormEvent } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { IoSearch } from 'react-icons/io5';
+import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useState } from "react";
+import { IoSearch } from "react-icons/io5";
 
 type SearchBarProps = {
   className?: string;
   placeholder?: string;
   showOnMobile?: boolean;
-}
+};
 
-export default function SearchBar({ className = '', placeholder = 'Hľadať produkty...', showOnMobile = true }: SearchBarProps) {
+export default function SearchBar({
+  className = "",
+  placeholder = "Hľadať produkty...",
+  showOnMobile = true,
+}: SearchBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState(searchParams?.get('q') || '');
+  const [searchTerm, setSearchTerm] = useState(searchParams?.get("q") || "");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -23,9 +27,9 @@ export default function SearchBar({ className = '', placeholder = 'Hľadať prod
   };
 
   return (
-    <form 
+    <form
       onSubmit={handleSubmit}
-      className={`flex items-center w-full max-w-xl relative ${className} ${!showOnMobile ? 'hidden md:flex' : ''}`}
+      className={`flex items-center w-full max-w-xl relative ${className} ${!showOnMobile ? "hidden md:flex" : ""}`}
     >
       <input
         type="text"
@@ -34,8 +38,8 @@ export default function SearchBar({ className = '', placeholder = 'Hľadať prod
         className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent transition-all"
         placeholder={placeholder}
       />
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         className="absolute right-2 text-gray-500 hover:text-blue-600 transition-colors"
         aria-label="Search"
       >
